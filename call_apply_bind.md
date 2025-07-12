@@ -4,7 +4,103 @@
 
 `call`, `apply`, and `bind` are JavaScript methods used to **explicitly set the value of `this`** inside a function. These methods allow precise control over the execution context (`this`) of a function.
 
-They are part of the **Function prototype** in JavaScript and are especially useful when working with functions that are reused across multiple objects or delayed in time (e.g., in callbacks or event handlers).
+## Main Advantage: Explicit Control Over this
+
+In JavaScript, the value of `this` can change depending on how a function is called (especially in callbacks, event handlers, etc.). These methods give you explicit control over the value of `this`.
+
+---
+
+**Real Interview Q: What's the difference between bind and call?**
+`call` invokes the function immediately with a given `this` context, whereas `bind` returns a new function with that context, which can be invoked later.
+
+---
+
+### 1. Borrow Methods Between Objects
+
+You can use a method of one object in the context of another.
+
+```js
+const person1 = { name: 'Alice' };
+const person2 = { name: 'Bob' };
+
+function sayHi() {
+  console.log(`Hi, I'm ${this.name}`);
+}
+
+sayHi.call(person1); // Hi, I'm Alice
+sayHi.call(person2); // Hi, I'm Bob
+```
+
+✅ Advantage: Avoid repeating code or duplicating methods.
+
+---
+
+### 2. Set `this` in Callbacks
+
+In asynchronous or event-driven code, `this` might be lost. `bind()` helps preserve it.
+
+```js
+class Counter {
+  constructor() {
+    this.count = 0;
+  }
+
+  increment() {
+    setTimeout(function () {
+      this.count++;
+      console.log(this.count);
+    }.bind(this), 1000); // `this` refers to Counter instance
+  }
+}
+```
+
+✅ Advantage: Avoid bugs due to `this` becoming undefined or pointing to `window`.
+
+---
+
+### What Does "Explicit" Mean in This Context?
+
+When we say `call`, `apply`, and `bind` let you **explicitly set `this`**, it means:
+
+> You manually tell JavaScript what `this` should be.
+
+Instead of relying on how a function is called (which normally determines `this`), you're saying:
+
+> "Hey JavaScript, when this function runs, make sure `this` refers to this specific object."
+
+---
+
+### 🔍 Example Without Explicit Binding (Implicit)
+
+```js
+const person = {
+  name: 'Alice',
+  greet() {
+    console.log(this.name);
+  }
+};
+
+person.greet(); // 'Alice' — because `this` refers to `person`
+```
+
+Here, `this` is set implicitly by how the function is called (`person.greet()`).
+
+---
+
+### ✨ Now With Explicit Binding Using `call`
+
+```js
+const person = { name: 'Alice' };
+function greet() {
+  console.log(this.name);
+}
+
+greet.call(person); // 'Alice' — `this` is explicitly set to `person`
+```
+
+🔑 You're telling JavaScript:
+
+> “Don’t guess who `this` is — I’ll tell you directly.”
 
 ---
 
@@ -112,6 +208,45 @@ button.addEventListener('click', user.handleClick.bind(user));
 ```
 
 **Explanation**: Without `bind`, `this` inside `handleClick` would point to the button element, not the `user` object. Using `bind` ensures the correct `this`.
+
+---
+
+## ⚙️ Implicit vs Explicit `this`
+
+✅ Implicit `this` Example
+
+```js
+const person = {
+  name: "Venkatesh",
+  getName() {
+    console.log(this.name);
+  }
+};
+
+person.getName(); // Venkatesh
+```
+
+**Explanation**: Here, `this` is set implicitly to `person` because `getName` is called using dot notation (`person.getName()`).
+
+✅ Explicit `this` Example
+
+```js
+const person1 = {
+  name: "Venkatesh"
+};
+const person2 = {
+  name: "Venkatesh Sajja"
+};
+
+function getName() {
+  console.log(this.name);
+}
+
+getName.call(person1); // Venkatesh
+getName.call(person2); // Venkatesh Sajja
+```
+
+**Explanation**: We use `call` to explicitly bind `this` because the method is not defined on the objects themselves.
 
 ---
 
