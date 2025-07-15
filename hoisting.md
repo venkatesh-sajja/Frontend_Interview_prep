@@ -113,3 +113,4 @@ function greet() {
 | Function Expression  | ✅ Var    | ❌ Function   | Only variable is hoisted as `undefined`     |
 
 ---
+
