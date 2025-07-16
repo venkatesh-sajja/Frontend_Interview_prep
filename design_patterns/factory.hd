@@ -13,6 +13,10 @@ In React, this pattern shines when you need to render components conditionally o
 such as form elements generated from a JSON config. 
 Combining the Factory Pattern with React Context allows the factory logic to be reused throughout your application — making component creation flexible and centralized.
 ---
+### ✅ Summary
+- Factory Pattern separates object creation from usage.
+- It's useful for dynamically creating components in JavaScript or React.
+- Context + Factory is a powerful combo in React for dynamic rendering.
 
 ### ✅ JavaScript Example — Notification Factory
 
@@ -158,9 +162,4 @@ export default Root;
 
 ---
 
-### ✅ Summary
-- Factory Pattern separates object creation from usage.
-- It's useful for dynamically creating components in JavaScript or React.
-- Context + Factory is a powerful combo in React for dynamic rendering.
 
-Let me know if you'd like a PDF or markdown
