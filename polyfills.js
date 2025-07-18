@@ -145,3 +145,66 @@ Array.prototype.myReduce = function(callback, initialValue){
 console.log([10, 2, , 4].myReduce((accum, item) => { return item + accum }));
 console.log("========");
 console.log([10, 2, , 4].reduce((accum, item) => { return item + accum }));
+
+
+
+
+
+// ✅ Polyfill for Promise.all
+Promise.myAll([]).then(res => {
+    console.log(res)
+}).catch(err => {
+    console.log(err)
+
+})
+
+Promise.myAll = function(promises){
+    return new Promise((resolve, reject) => {
+        if(promises.length === 0 ) return resolve([])
+        let result = []
+        let fulFilledPromises = 0
+        promises.forEach((promise, index) => {
+            Promise.resolve(promise).then( res => {
+                result[index] = res
+                fulFilledPromises++
+                if(fulFilledPromises === promises.length)
+                    return resolve(result)
+            }).catch(err => {
+                return reject(err)
+            })
+        })
+    })
+    
+    
+}
+
+Promise.allSettled = function (promises) {
+  return new Promise((resolve) => {
+    const results = [];
+    let settledCount = 0;
+
+    if (promises.length === 0) return resolve([]);
+
+    promises.forEach((promise, index) => {
+      Promise.resolve(promise)
+        .then((value) => {
+          results[index] = {
+            status: "fulfilled",
+            value,
+          };
+        })
+        .catch((reason) => {
+          results[index] = {
+            status: "rejected",
+            reason,
+          };
+        })
+        .finally(() => {
+          settledCount++;
+          if (settledCount === promises.length) {
+            resolve(results);
+          }
+        });
+    });
+  });
+};
